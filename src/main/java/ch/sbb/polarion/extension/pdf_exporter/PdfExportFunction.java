@@ -4,6 +4,7 @@ import ch.sbb.polarion.extension.generic.exception.ObjectNotFoundException;
 import ch.sbb.polarion.extension.generic.settings.NamedSettingsRegistry;
 import ch.sbb.polarion.extension.generic.settings.SettingId;
 import ch.sbb.polarion.extension.generic.util.ScopeUtils;
+import ch.sbb.polarion.extension.generic.util.StringUtils;
 import ch.sbb.polarion.extension.pdf_exporter.converter.PdfConverter;
 import ch.sbb.polarion.extension.pdf_exporter.rest.model.conversion.DocumentType;
 import ch.sbb.polarion.extension.pdf_exporter.rest.model.conversion.ExportParams;
@@ -140,6 +141,8 @@ public class PdfExportFunction implements IFunction<IModule> {
         String workItemProjectId = Objects.requireNonNull(args.getAsString(PARAM_NAME_PROJECT_ID, exportParams.getProjectId()));
         String existingWorkItemId = args.getAsString(PARAM_NAME_EXISTING_WORK_ITEM_ID, null);
         String createWorkItemType = args.getAsString(PARAM_NAME_CREATE_WORK_ITEM_TYPE, null);
+        String WF_COPY_WORKITEM_PATTERN_FIELD = "\\{wi:(\\w+)\\.?(\\w+)?\\}";
+        existingWorkItemId = StringUtils.replaceRegEx(existingWorkItemId, WF_COPY_WORKITEM_PATTERN_FIELD, module, false);
 
         IWorkItem workItem;
         if (existingWorkItemId != null) {
