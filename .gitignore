@@ -40,3 +40,4 @@ README.html
 
 node/
 node_modules/
+/bin/

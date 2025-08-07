@@ -222,6 +222,14 @@
             <version>${polarion.version}</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/net.objecthunter/exp4j -->
+		<dependency>
+			<groupId>net.objecthunter</groupId>
+			<artifactId>exp4j</artifactId>
+			<version>0.4.8</version>
+		</dependency>
+
     </dependencies>
 
     <build>
@@ -243,36 +251,36 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>ch.sbb.maven.plugins</groupId>
-                <artifactId>markdown2html-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>readme.md-to-about.html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>convert</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>user_guide.md-to-user-guide.html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>convert</goal>
-                        </goals>
-                        <configuration>
-                            <inputFile>USER_GUIDE.md</inputFile>
-                            <outputFile>${markdown2html-maven-plugin.user-guide.outputFile}</outputFile>
-                            <tokenEnvVarName>${markdown2html-maven-plugin.tokenEnvVarName}</tokenEnvVarName>
-                            <failOnError>${markdown2html-maven-plugin.failOnError}</failOnError>
-                            <generateHeadingIds>${markdown2html-maven-plugin.generateHeadingIds}</generateHeadingIds>
-                            <relativeLinkPrefix>${project.scm.url}</relativeLinkPrefix>
-                            <openExternalLinksInNewTab>true</openExternalLinksInNewTab>
-                            <imageProcessingType>EMBED</imageProcessingType>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>ch.sbb.maven.plugins</groupId>-->
+<!--                <artifactId>markdown2html-maven-plugin</artifactId>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>readme.md-to-about.html</id>-->
+<!--                        <phase>generate-resources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>convert</goal>-->
+<!--                        </goals>-->
+<!--                    </execution>-->
+<!--                    <execution>-->
+<!--                        <id>user_guide.md-to-user-guide.html</id>-->
+<!--                        <phase>generate-resources</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>convert</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <inputFile>USER_GUIDE.md</inputFile>-->
+<!--                            <outputFile>${markdown2html-maven-plugin.user-guide.outputFile}</outputFile>-->
+<!--                            <tokenEnvVarName>${markdown2html-maven-plugin.tokenEnvVarName}</tokenEnvVarName>-->
+<!--                            <failOnError>${markdown2html-maven-plugin.failOnError}</failOnError>-->
+<!--                            <generateHeadingIds>${markdown2html-maven-plugin.generateHeadingIds}</generateHeadingIds>-->
+<!--                            <relativeLinkPrefix>${project.scm.url}</relativeLinkPrefix>-->
+<!--                            <openExternalLinksInNewTab>true</openExternalLinksInNewTab>-->
+<!--                            <imageProcessingType>EMBED</imageProcessingType>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

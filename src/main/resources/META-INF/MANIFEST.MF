@@ -5,6 +5,7 @@ Bundle-Name: PDF Exporter Extension for Polarion ALM
 Require-Bundle: com.polarion.portal.tomcat,
  com.polarion.alm.ui,
  com.polarion.platform.guice,
+ com.polarion.platform.jobs,
  com.polarion.alm.tracker,
  org.glassfish.jersey,
  com.fasterxml.jackson,
