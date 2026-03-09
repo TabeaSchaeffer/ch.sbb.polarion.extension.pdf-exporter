@@ -100,7 +100,6 @@ public class PdfConverter {
         @NotNull final DocumentData<? extends IUniqueObject> documentData = DocumentDataFactory.getDocumentData(exportParams, true);
         @NotNull String htmlContent = prepareHtmlContent(exportParams, project, documentData, metaInfoCallback);
 
-        generationLog.log("Html is ready, starting pdf generation");
         if (PdfExporterExtensionConfiguration.getInstance().isDebug()) {
             new HtmlLogger().log(documentData.getContent(), htmlContent, generationLog.getLog());
         }

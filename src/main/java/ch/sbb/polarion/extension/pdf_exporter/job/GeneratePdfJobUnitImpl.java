@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -113,6 +114,7 @@ public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GenerateP
     protected IJobStatus runInternal(IProgressMonitor progress) {
         progress.beginTask(getName(), 0);
         try {
+        		TimeUnit.SECONDS.sleep(180);
         		IWorkflowObject object = (IWorkflowObject) dataService.getInstance(SubterraURI.fromString(objectUri));
         		
             	String existingWorkItemId = arguments.getAsString(PARAM_NAME_EXISTING_WORK_ITEM_ID, null); 
@@ -271,6 +273,3 @@ public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GenerateP
         return new DocumentFileNameHelper().getDocumentFileName(exportParams);
     }
 }
-
-                    
-     

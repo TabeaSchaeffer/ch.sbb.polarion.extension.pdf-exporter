@@ -1464,29 +1464,215 @@
       },
       "ConverterJobDetails" : {
         "type" : "object",
-        "description" : "Details of the converter job including status and error message if any"
+        "description" : "Details of the converter job including status and error message if any",
+        "properties" : {
+          "errorMessage" : {
+            "type" : "string",
+            "description" : "Error message if the conversion failed"
+          },
+          "status" : {
+            "type" : "string",
+            "description" : "Status of the converter job",
+            "enum" : [ "IN_PROGRESS", "SUCCESSFULLY_FINISHED", "FAILED", "CANCELLED" ],
+            "example" : "IN_PROGRESS"
+          }
+        }
       },
       "DocIdentifier" : {
         "type" : "object",
-        "description" : "Unique document identifier data"
+        "description" : "Unique document identifier data",
+        "properties" : {
+          "documentName" : {
+            "type" : "string",
+            "description" : "Document name"
+          },
+          "projectId" : {
+            "type" : "string",
+            "description" : "Project ID"
+          },
+          "spaceId" : {
+            "type" : "string",
+            "description" : "Space ID"
+          }
+        }
       },
       "DocumentCollectionEntry" : {
         "type" : "object",
-        "description" : "Details about document from collection"
+        "description" : "Details about document from collection",
+        "properties" : {
+          "documentName" : {
+            "type" : "string",
+            "description" : "The name of the document"
+          },
+          "projectId" : {
+            "type" : "string",
+            "description" : "The unique identifier for the project",
+            "example" : "elibrary"
+          },
+          "revision" : {
+            "type" : "string",
+            "description" : "The revision of the document"
+          },
+          "spaceId" : {
+            "type" : "string",
+            "description" : "The unique identifier of the space within the project"
+          }
+        }
       },
       "ExportParams" : {
         "type" : "object",
         "properties" : {
+          "attachmentsFilter" : {
+            "type" : "string",
+            "description" : "Filter for attachments to be downloaded, example: '*.pdf'"
+          },
+          "baselineRevision" : {
+            "type" : "string",
+            "description" : "The specific revision of the provided baseline"
+          },
+          "chapters" : {
+            "type" : "array",
+            "description" : "Specific higher level chapters",
+            "items" : {
+              "type" : "string",
+              "description" : "Specific higher level chapters"
+            }
+          },
+          "coverPage" : {
+            "type" : "string",
+            "description" : "Cover page settings name"
+          },
+          "css" : {
+            "type" : "string",
+            "description" : "CSS settings name"
+          },
+          "cutEmptyChapters" : {
+            "type" : "boolean",
+            "description" : "Empty chapters should be removed from the document"
+          },
+          "cutEmptyWIAttributes" : {
+            "type" : "boolean",
+            "default" : true,
+            "description" : "Empty work item attributes should be removed from the document"
+          },
+          "cutLocalUrls" : {
+            "type" : "boolean",
+            "description" : "Local Polarion URLs should be removed from the document"
+          },
           "documentType" : {
             "type" : "string",
             "description" : "Type of the document",
             "enum" : [ "BASELINE_COLLECTION", "LIVE_DOC", "LIVE_REPORT", "TEST_RUN", "WIKI_PAGE" ],
             "example" : "LIVE_DOC"
           },
+          "enableCommentsRendering" : {
+            "type" : "boolean",
+            "default" : true,
+            "deprecated" : true,
+            "description" : "Comments should be rendered in the exported document. Deprecated: use 'renderComments' instead"
+          },
+          "fileName" : {
+            "type" : "string",
+            "description" : "Target file name of exported document"
+          },
+          "fitToPage" : {
+            "type" : "boolean",
+            "default" : true,
+            "description" : "Content should be scaled to fit the page"
+          },
+          "followHTMLPresentationalHints" : {
+            "type" : "boolean",
+            "default" : true,
+            "description" : "HTML presentational hints should be followed"
+          },
+          "headerFooter" : {
+            "type" : "string",
+            "description" : "Header/Footer settings name"
+          },
+          "headersColor" : {
+            "type" : "string",
+            "description" : "Color to be used for headers in the document. By default dark blue color (Polarion's default)"
+          },
+          "internalContent" : {
+            "type" : "string",
+            "description" : "Internal content"
+          },
+          "language" : {
+            "type" : "string",
+            "description" : "Language in the exported document"
+          },
+          "linkedWorkitemRoles" : {
+            "type" : "array",
+            "description" : "Specific Workitem roles",
+            "example" : [ "has parent", "depends on" ],
+            "items" : {
+              "type" : "string",
+              "description" : "Specific Workitem roles",
+              "example" : "[\"has parent\",\"depends on\"]"
+            }
+          },
+          "localization" : {
+            "type" : "string",
+            "description" : "Localization settings name"
+          },
+          "locationPath" : {
+            "type" : "string",
+            "description" : "Document path for export",
+            "example" : "Specification/Product Specification"
+          },
+          "markReferencedWorkitems" : {
+            "type" : "boolean",
+            "description" : "Referenced work items should be marked in the document"
+          },
+          "numberedListStyles" : {
+            "type" : "string",
+            "description" : "SCC styles to be applied to numbered lists in the document"
+          },
+          "orientation" : {
+            "type" : "string",
+            "default" : "PORTRAIT",
+            "description" : "Orientation of the output document",
+            "enum" : [ "PORTRAIT", "LANDSCAPE" ]
+          },
+          "paperSize" : {
+            "type" : "string",
+            "default" : "A4",
+            "description" : "Standard paper sizes",
+            "enum" : [ "A5", "A4", "A3", "B5", "B4", "JIS_B5", "JIS_B4", "LETTER", "LEGAL", "LEDGER" ]
+          },
+          "projectId" : {
+            "type" : "string",
+            "description" : "The unique identifier for the project",
+            "example" : "elibrary"
+          },
           "renderComments" : {
             "type" : "string",
             "description" : "Which comments should be rendered in the exported document",
             "enum" : [ "OPEN", "ALL" ]
+          },
+          "revision" : {
+            "type" : "string",
+            "description" : "The specific revision of the document"
+          },
+          "testcaseFieldId" : {
+            "type" : "string",
+            "description" : "A boolean testcase field ID. Attachments will be downloaded only from the testcases which have True value in the provided field. Leaving field empty will process all testcases."
+          },
+          "urlQueryParameters" : {
+            "type" : "object",
+            "additionalProperties" : {
+              "type" : "string",
+              "description" : "Map of attributes extracted from the URL"
+            },
+            "description" : "Map of attributes extracted from the URL"
+          },
+          "watermark" : {
+            "type" : "boolean",
+            "description" : "Watermark content to be applied to the document"
+          },
+          "webhooks" : {
+            "type" : "string",
+            "description" : "Webhooks settings name"
           }
         }
       },
@@ -1671,7 +1857,28 @@
       },
       "NestedListsCheck" : {
         "type" : "object",
-        "description" : "Check result indicating whether nested lists are present"
+        "description" : "Check result indicating whether nested lists are present",
+        "properties" : {
+          "containsNestedLists" : {
+            "type" : "boolean",
+            "description" : "Indicates whether the content contains nested lists"
+          }
+        }
+      },
+      "PageInfo" : {
+        "type" : "object",
+        "description" : "Information about a specific page that failed validation, including its number and content.",
+        "properties" : {
+          "content" : {
+            "type" : "string",
+            "description" : "The encoded content of the page that failed validation"
+          },
+          "number" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "The number of the page that failed validation"
+          }
+        }
       },
       "ParameterizedHeader" : {
         "type" : "object",
@@ -1737,10 +1944,36 @@
         }
       },
       "StylePackageWeightInfo" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "name" : {
+            "type" : "string",
+            "description" : "The name of the setting"
+          },
+          "scope" : {
+            "type" : "string",
+            "description" : "The scope of the setting"
+          },
+          "weight" : {
+            "type" : "number",
+            "format" : "float",
+            "description" : "The weight of the setting"
+          }
+        }
       },
       "TestRunAttachment" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "fileName" : {
+            "type" : "string"
+          },
+          "id" : {
+            "type" : "string"
+          },
+          "revision" : {
+            "type" : "string"
+          }
+        }
       },
       "Version" : {
         "type" : "object",
@@ -1777,11 +2010,49 @@
         }
       },
       "WebhooksStatus" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "enabled" : {
+            "type" : "boolean"
+          }
+        }
       },
       "WidthValidationResult" : {
         "type" : "object",
-        "description" : "Result of the width validation process"
+        "description" : "Result of the width validation process",
+        "properties" : {
+          "invalidPages" : {
+            "$ref" : "#/components/schemas/PageInfo"
+          },
+          "suspiciousWorkItems" : {
+            "$ref" : "#/components/schemas/WorkItemRefData"
+          }
+        }
+      },
+      "WorkItemRefData" : {
+        "type" : "object",
+        "description" : "Data class representing a reference to a work item, including ID, project, layout, and revision",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "description" : "The unique identifier of the Work item"
+          },
+          "layout" : {
+            "type" : "string",
+            "description" : "Work item layout"
+          },
+          "link" : {
+            "type" : "string"
+          },
+          "project" : {
+            "type" : "string",
+            "description" : "The unique identifier of the project to which the Work item belongs"
+          },
+          "revision" : {
+            "type" : "string",
+            "description" : "The revision number of the Work item"
+          }
+        }
       }
     }
   }
