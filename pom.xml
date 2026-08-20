@@ -69,9 +69,7 @@
         <!-- Extension-specific Require-Bundle (in addition to common ones from parent POM):
             com.polarion.alm.wiki
             org.jsoup
-            net.bytebuddy.byte-buddy
-            org.apache.tika.patched;resolution:=optional
-            org.apache.tika;resolution:=optional
+            net.bytebuddy.byte-buddy org.apache.tika.patched;resolution:=optional org.apache.tika;resolution:=optional
             org.apache.httpcomponents.httpclient, org.apache.httpcomponents.httpcore (used by
               CustomResourceUrlResolver to pin a request to the addresses ResourceUrlPolicy vetted)
         -->

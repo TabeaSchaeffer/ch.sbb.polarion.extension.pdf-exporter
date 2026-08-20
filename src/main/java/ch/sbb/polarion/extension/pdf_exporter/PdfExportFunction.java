@@ -1,6 +1,5 @@
 package ch.sbb.polarion.extension.pdf_exporter;
 
-
 import com.polarion.alm.tracker.model.IModule;
 import com.polarion.alm.tracker.model.IWorkflowObject;
 import com.polarion.alm.tracker.workflow.IArguments;
@@ -19,33 +18,33 @@ import com.polarion.platform.jobs.IJobService;
 import com.polarion.platform.jobs.IJobUnitFactory;
 
 public class PdfExportFunction implements IFunction<IModule> {
-	private final IJobService jobService = PlatformContext.getPlatform().lookupService(IJobService.class);
-	private final Logger logger = Logger.getLogger(PdfExportFunction.class);
+
+    private final IJobService jobService = PlatformContext.getPlatform().lookupService(IJobService.class);
+    private final Logger logger = Logger.getLogger(PdfExportFunction.class);
 
     @Override
     public void execute(@NotNull ICallContext context, @NotNull IArguments args) {
-    	IWorkflowObject object = context.getTarget();
-    	String jobUnitName = String.format("GeneratePdfJobUnit for WorkItem %s/%s.", object.getProjectId(), object.getId());
-		IJobManager jobManager = jobService.getJobManager();
-		IJobUnitFactory jobFactory = jobService.getJobUnitRepository().getJobUnitFactory(GeneratePdfJobUnit.JOB_NAME);
-		if (jobFactory == null) {
-			logger.error(String.format("The job %s is not available.", GeneratePdfJobUnit.JOB_NAME));
-			return;
-		}
+        IWorkflowObject object = context.getTarget();
+        String jobUnitName = String.format("GeneratePdfJobUnit for WorkItem %s/%s.", object.getProjectId(), object.getId());
+        IJobManager jobManager = jobService.getJobManager();
+        IJobUnitFactory jobFactory = jobService.getJobUnitRepository().getJobUnitFactory(GeneratePdfJobUnit.JOB_NAME);
+        if (jobFactory == null) {
+            logger.error(String.format("The job %s is not available.", GeneratePdfJobUnit.JOB_NAME));
+            return;
+        }
 
-		try {
-			GeneratePdfJobUnit jobUnit = (GeneratePdfJobUnit) jobFactory.createJobUnit(jobUnitName);
-			jobUnit.setArguments(args);
-			jobUnit.setContext(context);
-			jobUnit.setObjectUri(object.getUri().toString());
-			IJob job = jobManager.spawnJob(jobUnit, null);
-			job.schedule();
+        try {
+            GeneratePdfJobUnit jobUnit = (GeneratePdfJobUnit) jobFactory.createJobUnit(jobUnitName);
+            jobUnit.setArguments(args);
+            jobUnit.setContext(context);
+            jobUnit.setObjectUri(object.getUri().toString());
+            IJob job = jobManager.spawnJob(jobUnit, null);
+            job.schedule();
 
-		} catch (Exception e) {
-			logger.error(e);
-		}
+        } catch (Exception e) {
+            logger.error(e);
+        }
 
     }
-    
-    
+
 }

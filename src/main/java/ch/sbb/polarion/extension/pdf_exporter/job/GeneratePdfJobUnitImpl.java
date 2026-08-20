@@ -55,55 +55,55 @@ import ch.sbb.polarion.extension.pdf_exporter.util.DocumentFileNameHelper;
 import ch.sbb.polarion.extension.pdf_exporter.util.StringUtils;
 
 /**
- * Implementation of the GeneratePdf job 
+ * Implementation of the GeneratePdf job
+ *
  * @author Tabea Schaeffer
  * @since 2.0.0
  */
 public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GeneratePdfJobUnit {
-	private static final String PARAM_NAME_PROJECT_ID = "project_id";
-	private static final String PARAM_NAME_EXISTING_WORK_ITEM_ID = "existing_wi_id";
-	private static final String PARAM_NAME_CREATE_WORK_ITEM_TYPE = "create_wi_type_id";
-	private static final String PARAM_NAME_CREATE_WORK_ITEM_TITLE = "create_wi_title";
-	private static final String PARAM_NAME_CREATE_WORK_ITEM_DESCRIPTION = "create_wi_description";
-	private static final String PARAM_NAME_ATTACHMENT_TITLE = "attachment_title";
-	private static final String PARAM_NAME_STYLE_PACKAGE = "style_package";
-	private static final String PARAM_NAME_PREFER_LAST_BASELINE = "prefer_last_baseline";
-	public static final String WF_COPY_WORKITEM_PATTERN_FIELD = "\\{wi:(\\w+)\\.?(\\w+)?\\}";
-	public static final String WF_COPY_DOCUMENT_PATTERN_FIELD = "\\{doc:(\\w+)\\.?(\\w+)?\\}";
-	
-	private static final String STYLE_PACKAGE_DEFAULT = "Default";
-	private final PdfExporterPolarionService pdfExporterPolarionService;
-	private final PdfConverter pdfConverter;
+
+    private static final String PARAM_NAME_PROJECT_ID = "project_id";
+    private static final String PARAM_NAME_EXISTING_WORK_ITEM_ID = "existing_wi_id";
+    private static final String PARAM_NAME_CREATE_WORK_ITEM_TYPE = "create_wi_type_id";
+    private static final String PARAM_NAME_CREATE_WORK_ITEM_TITLE = "create_wi_title";
+    private static final String PARAM_NAME_CREATE_WORK_ITEM_DESCRIPTION = "create_wi_description";
+    private static final String PARAM_NAME_ATTACHMENT_TITLE = "attachment_title";
+    private static final String PARAM_NAME_STYLE_PACKAGE = "style_package";
+    private static final String PARAM_NAME_PREFER_LAST_BASELINE = "prefer_last_baseline";
+    public static final String WF_COPY_WORKITEM_PATTERN_FIELD = "\\{wi:(\\w+)\\.?(\\w+)?\\}";
+    public static final String WF_COPY_DOCUMENT_PATTERN_FIELD = "\\{doc:(\\w+)\\.?(\\w+)?\\}";
+
+    private static final String STYLE_PACKAGE_DEFAULT = "Default";
+    private final PdfExporterPolarionService pdfExporterPolarionService;
+    private final PdfConverter pdfConverter;
     private ITrackerService trackerService = PlatformContext.getPlatform().lookupService(ITrackerService.class);
     private IDataService dataService = trackerService.getDataService();
-	
 
     private String objectUri;
     private IArguments arguments;
     private ICallContext context;
 
-	/**
-	 * Constructor
-	 * @param name Name of the Job
-	 * @param creator Factory of the job
-	 */
+    /**
+     * Constructor
+     *
+     * @param name Name of the Job
+     * @param creator Factory of the job
+     */
     public GeneratePdfJobUnitImpl(String name, IJobUnitFactory creator) {
         super(name, creator);
         this.pdfExporterPolarionService = new PdfExporterPolarionService();
-	    this.pdfConverter = new PdfConverter();
+        this.pdfConverter = new PdfConverter();
     }
-    
-
 
     @Override
     public void setObjectUri(String objectUri) {
         this.objectUri = objectUri;
     }
-    
-    public void setContext (ICallContext context) {
-    	this.context= context;
+
+    public void setContext(ICallContext context) {
+        this.context = context;
     }
-    
+
     @Override
     public void setArguments(IArguments arguments) {
         this.arguments = arguments;
@@ -111,51 +111,51 @@ public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GenerateP
 
     /**
      * The main job method
+     *
      * @param progress IProgressMonitor object
      */
     protected IJobStatus runInternal(IProgressMonitor progress) {
         progress.beginTask(getName(), 0);
         try {
-        		TimeUnit.SECONDS.sleep(180);
-        		IWorkflowObject object = (IWorkflowObject) dataService.getInstance(SubterraURI.fromString(objectUri));
-        		
-            	String existingWorkItemId = arguments.getAsString(PARAM_NAME_EXISTING_WORK_ITEM_ID, null); 
-                String WF_COPY_WORKITEM_PATTERN_FIELD = "\\{wi:(\\w+)\\.?(\\w+)?\\}";
-                existingWorkItemId = StringUtils.replaceRegEx(existingWorkItemId, WF_COPY_WORKITEM_PATTERN_FIELD, object, false);
+            TimeUnit.SECONDS.sleep(180);
+            IWorkflowObject object = (IWorkflowObject) dataService.getInstance(SubterraURI.fromString(objectUri));
 
-            	IModule module = resolveModule(object, existingWorkItemId);
-        		String workItemId = resolveWorkItemId(object, existingWorkItemId);
-        		
+            String existingWorkItemId = arguments.getAsString(PARAM_NAME_EXISTING_WORK_ITEM_ID, null);
+            String WF_COPY_WORKITEM_PATTERN_FIELD = "\\{wi:(\\w+)\\.?(\\w+)?\\}";
+            existingWorkItemId = StringUtils.replaceRegEx(existingWorkItemId, WF_COPY_WORKITEM_PATTERN_FIELD, object, false);
 
-                if (module == null) {
-                    throw new UserFriendlyRuntimeException("The PDF export source module could not be resolved.");
-                }
-                if (!pdfExporterPolarionService.userAuthorizedForExport(module.getProjectId())) {
-                    throw new SecurityException("Current user is not allowed to export PDF for project '" + module.getProjectId() + "'");
-                }
+            IModule module = resolveModule(object, existingWorkItemId);
+            String workItemId = resolveWorkItemId(object, existingWorkItemId);
 
-                // newly created modules don't have lastRevision and throw UnresolvableObjectException
-                // we are going to skip this case entirely, doubt anyone wants to export document that has been just created (thus it is basically empty)
-                try {
-                    module.getLastRevision();
-                } catch (UnresolvableObjectException | WrapperException e) {
-                    return null;
-                }
-                ExportParams exportParams = getExportParams(module, arguments);
-                byte[] pdfBytes = pdfConverter.convertToPdf(exportParams, null);
-                TransactionalExecutor.executeInWriteTransaction(tx -> {
-                	savePdfAsWorkItemAttachment(module, exportParams, context.getTargetStatusId(), arguments, pdfBytes, workItemId);
+            if (module == null) {
+                throw new UserFriendlyRuntimeException("The PDF export source module could not be resolved.");
+            }
+            if (!pdfExporterPolarionService.userAuthorizedForExport(module.getProjectId())) {
+                throw new SecurityException("Current user is not allowed to export PDF for project '" + module.getProjectId() + "'");
+            }
+
+            // newly created modules don't have lastRevision and throw UnresolvableObjectException
+            // we are going to skip this case entirely, doubt anyone wants to export document that has been just created (thus it is basically empty)
+            try {
+                module.getLastRevision();
+            } catch (UnresolvableObjectException | WrapperException e) {
                 return null;
-                });
+            }
+            ExportParams exportParams = getExportParams(module, arguments);
+            byte[] pdfBytes = pdfConverter.convertToPdf(exportParams, null);
+            TransactionalExecutor.executeInWriteTransaction(tx -> {
+                savePdfAsWorkItemAttachment(module, exportParams, context.getTargetStatusId(), arguments, pdfBytes, workItemId);
+                return null;
+            });
             return getStatusOK(null);
-		} catch(Exception e) {
-			getLogger().error(String.format("Exception caught: %s", e.getLocalizedMessage()));
+        } catch (Exception e) {
+            getLogger().error(String.format("Exception caught: %s", e.getLocalizedMessage()));
             return getStatusFailed(e.getLocalizedMessage(), e);
         } finally {
             progress.done();
         }
     }
-    
+
     private IModule resolveModule(IWorkflowObject object, String pdfPath) {
         try {
             ITrackerService trackerService = PlatformContext.getPlatform().lookupService(ITrackerService.class);
@@ -233,17 +233,17 @@ public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GenerateP
                 .attachmentsFilter(stylePackage.getAttachmentsFilter())
                 .testcaseFieldId(stylePackage.getTestcaseFieldId())
                 .urlQueryParameters(stylePackage.getWorkItemsQuery() == null || stylePackage.getWorkItemsQuery().isEmpty()
-                    ? null
-                    : new HashMap<>(Map.of(ExportParams.URL_QUERY_PARAM_QUERY, stylePackage.getWorkItemsQuery())))
+                        ? null
+                        : new HashMap<>(Map.of(ExportParams.URL_QUERY_PARAM_QUERY, stylePackage.getWorkItemsQuery())))
                 .build();
     }
 
     @VisibleForTesting
     void savePdfAsWorkItemAttachment(IModule module, ExportParams exportParams, String targetStatusId, IArguments args, byte[] pdfContentBytes, String workItemId) {
         String workItemProjectId = Objects.requireNonNull(args.getAsString(PARAM_NAME_PROJECT_ID, exportParams.getProjectId()));
-        
+
         String createWorkItemType = args.getAsString(PARAM_NAME_CREATE_WORK_ITEM_TYPE, null);
-       
+
         IWorkItem workItem;
         if (workItemId != null) {
             workItem = pdfExporterPolarionService.getWorkItem(workItemProjectId, workItemId);
@@ -255,7 +255,7 @@ public class GeneratePdfJobUnitImpl extends AbstractJobUnit implements GenerateP
         } else {
             throw new UserFriendlyRuntimeException("Workflow function isn't configured properly. Please contact system administrator.");
         }
-        
+
         String attachmentFileName = getDocumentFileName(exportParams);
         IAttachment existing = workItem.getAttachmentByFileName(attachmentFileName);
         if (existing != null) {
