@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module id="ch.sbb.polarion.extension.pdf_exporter" version="1.0.0">
 
+    <contribution configuration-id="com.polarion.platform.jobs.configuration">
+        <jobUnitFactory name="GeneratePdf.job" factory="jobUnitFactoryGeneratePdf"/>
+    </contribution>
+
+    <service-point id="jobUnitFactoryGeneratePdf" interface="com.polarion.platform.jobs.IJobUnitFactory">
+        <invoke-factory>
+            <construct class="ch.sbb.polarion.extension.pdf_exporter.job.GeneratePdfJobUnitFactory"/>
+        </invoke-factory>
+    </service-point>
+
     <contribution configuration-id="com.polarion.alm.tracker.workflow.functions">
-        <function name="PDF Export" prototype="Module"
+        <function name="PDF Export" prototype="*"
                   clazz="ch.sbb.polarion.extension.pdf_exporter.PdfExportFunction">
             <parameter name="Workitem ID to reuse" id="existing_wi_id" />
             <parameter name="Workitem type ID to create" id="create_wi_type_id" />
